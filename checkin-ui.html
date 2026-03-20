@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>签到页面 UI 设计稿</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        /* iPhone 容器 */
+        .phone {
+            width: 375px;
+            height: 812px;
+            background: #F8F9FC;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        
+        /* 状态栏 */
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        
+        .status-icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 0 16px;
+            height: calc(100% - 44px - 83px);
+            overflow-y: auto;
+        }
+        
+        /* 统计卡片 */
+        .stats-card {
+            background: linear-gradient(135deg, #40E0D0 0%, #20B2AA 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 16px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(64, 224, 208, 0.3);
+        }
+        
+        .stats-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+        
+        .stats-subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+        
+        .stats-points {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .checkin-btn {
+            background: white;
+            color: #20B2AA;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .checkin-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* 签到日历标题 */
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin: 24px 0 16px 0;
+        }
+        
+        /* 签到网格 */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .day-card {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            position: relative;
+        }
+        
+        .day-card.completed {
+            background: #40E0D0;
+            color: white;
+        }
+        
+        .day-card.available {
+            background: #F0FFFE;
+            border: 1.5px solid #40E0D0;
+            color: #40E0D0;
+        }
+        
+        .day-card.locked {
+            background: #F5F5F5;
+            color: #999999;
+        }
+        
+        .day-label {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        
+        .day-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .day-status {
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        /* 奖励标签 */
+        .reward-tag {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #FF6B6B;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        /* 终极奖励卡片 */
+        .ultimate-reward {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 16px;
+            text-align: center;
+            color: #8B4513;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .ultimate-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .gift-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .ultimate-desc {
+            font-size: 13px;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        
+        .ultimate-btn {
+            background: white;
+            color: #FF8C00;
+            border: none;
+            padding: 10px 32px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* 规则说明 */
+        .rules-section {
+            margin-top: 24px;
+            padding-bottom: 24px;
+        }
+        
+        .rules-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #666666;
+            line-height: 1.5;
+        }
+        
+        .rule-dot {
+            width: 5px;
+            height: 5px;
+            background: #40E0D0;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        
+        /* 底部导航 */
+        .tab-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding-top: 8px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+        }
+        
+        .tab-icon {
+            font-size: 24px;
+            color: #999999;
+        }
+        
+        .tab-item.active .tab-icon {
+            color: #1A1A1A;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+            color: #999999;
+        }
+        
+        .tab-item.active .tab-label {
+            color: #1A1A1A;
+            font-weight: 500;
+        }
+        
+        /* 消息角标 */
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: 4px;
+            background: #FF3B30;
+            color: white;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .tab-icon-wrapper {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <!-- 状态栏 -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+                <span>📶</span>
+                <span>📡</span>
+                <span>🔋</span>
+            </div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 统计卡片 -->
+            <div class="stats-card">
+                <div class="stats-title">连续签到 7 天</div>
+                <div class="stats-subtitle">已累计获得</div>
+                <div class="stats-points">128 积分</div>
+                <button class="checkin-btn">今日签到 +10 积分</button>
+            </div>
+            
+            <!-- 签到日历 -->
+            <div class="section-title">签到日历</div>
+            <div class="calendar-grid">
+                <!-- Day 1 - 已签到 -->
+                <div class="day-card completed">
+                    <div class="day-label">Day 1</div>
+                    <div class="day-icon">✓</div>
+                    <div class="day-status">已签到</div>
+                </div>
+                
+                <!-- Day 2 - 可领取 -->
+                <div class="day-card available">
+                    <div class="day-label">Day 2</div>
+                    <div class="day-icon">→</div>
+                    <div class="day-status">点击领取</div>
+                </div>
+                
+                <!-- Day 3 - 可领取 -->
+                <div class="day-card available">
+                    <div class="day-label">Day 3</div>
+                    <div class="day-icon">→</div>
+                    <div class="day-status">点击领取</div>
+                </div>
+                
+                <!-- Day 4 - 可领取 -->
+                <div class="day-card available">
+                    <div class="day-label">Day 4</div>
+                    <div class="day-icon">→</div>
+                    <div class="day-status">点击领取</div>
+                </div>
+                
+                <!-- Day 5 - 可领取 -->
+                <div class="day-card available">
+                    <div class="day-label">Day 5</div>
+                    <div class="day-icon">→</div>
+                    <div class="day-status">点击领取</div>
+                    <div class="reward-tag">+20</div>
+                </div>
+                
+                <!-- Day 6 - 未开启 -->
+                <div class="day-card locked">
+                    <div class="day-label">Day 6</div>
+                    <div class="day-icon">?</div>
+                    <div class="day-status">未开启</div>
+                </div>
+            </div>
+            
+            <!-- 终极奖励 -->
+            <div class="ultimate-reward">
+                <div class="ultimate-title">
+                    <span>🎁</span>
+                    <span>第 7 天终极奖励</span>
+                </div>
+                <div class="gift-icon">🎁</div>
+                <div class="ultimate-desc">连续签到 7 天解锁神秘大奖</div>
+                <button class="ultimate-btn">查看奖励</button>
+            </div>
+            
+            <!-- 规则说明 -->
+            <div class="rules-section">
+                <div class="rules-title">签到规则</div>
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <span>每日签到可获得 10 积分奖励</span>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <span>连续签到 7 天可获得终极神秘大奖</span>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <span>若断签，连续天数将重新计算</span>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <span>积分可用于兑换优惠券和商品</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="tab-bar">
+            <div class="tab-item">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-label">首页</span>
+            </div>
+            <div class="tab-item">
+                <span class="tab-icon">🛍️</span>
+                <span class="tab-label">购物</span>
+            </div>
+            <div class="tab-item active">
+                <span class="tab-icon">🎮</span>
+                <span class="tab-label">游戏</span>
+            </div>
+            <div class="tab-item">
+                <div class="tab-icon-wrapper">
+                    <span class="tab-icon">💬</span>
+                    <span class="badge">99+</span>
+                </div>
+                <span class="tab-label">消息</span>
+            </div>
+            <div class="tab-item">
+                <span class="tab-icon">👤</span>
+                <span class="tab-label">我的</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
